@@ -1,13 +1,19 @@
 import BigNumber from "bignumber.js";
 import * as rippleWallet from "jcc_wallet/lib/ripple";
 import { RippleAPI } from "ripple-lib";
-import IWallet from "./model/wallet";
 import IMemo from "./model/memo";
 import IPayment from "./model/payment";
-import { isValidRippleSecret, isValidRippleAddress, isValidAmount, isValidMemo, validate } from "./validator";
 import IPrepared from "./model/prepared";
 import ISignature from "./model/signature";
+import IWallet from "./model/wallet";
+import { isValidAmount, isValidMemo, isValidRippleAddress, isValidRippleSecret, validate } from "./validator";
 
+/**
+ * ripple fingate
+ *
+ * @export
+ * @class RippleFingate
+ */
 export default class RippleFingate {
 
     private _remote = null;
@@ -18,18 +24,49 @@ export default class RippleFingate {
         });
     }
 
+    /**
+     * create ripple wallet
+     *
+     * @static
+     * @returns {IWallet}
+     * @memberof RippleFingate
+     */
     public static createWallet(): IWallet {
         return rippleWallet.createWallet();
     }
 
+    /**
+     * check ripple address is valid or not
+     *
+     * @static
+     * @param {string} address
+     * @returns {boolean} return true if valid
+     * @memberof RippleFingate
+     */
     public static isValidAddress(address: string): boolean {
         return rippleWallet.isValidAddress(address);
     }
 
+    /**
+     * check ripple secret is valid or not
+     *
+     * @static
+     * @param {string} secret
+     * @returns {boolean} return true if valid
+     * @memberof RippleFingate
+     */
     public static isValidSecret(secret: string): boolean {
         return rippleWallet.isValidSecret(secret);
     }
 
+    /**
+     * retrive address with secret
+     *
+     * @static
+     * @param {string} secret
+     * @returns {(string | null)} return address if valid, otherwise return null
+     * @memberof RippleFingate
+     */
     public static getAddress(secret: string): string | null {
         return rippleWallet.getAddress(secret);
     }
@@ -38,6 +75,12 @@ export default class RippleFingate {
         return this._remote;
     }
 
+    /**
+     * connect to ripple node server
+     *
+     * @returns
+     * @memberof RippleFingate
+     */
     public async connect() {
         return new Promise((resolve, reject) => {
             this._remote.connect().then(() => {
@@ -48,26 +91,52 @@ export default class RippleFingate {
         });
     }
 
+    /**
+     * check if connected to ripple node server
+     *
+     * @returns {boolean}
+     * @memberof RippleFingate return true if connected
+     */
     public isConnected(): boolean {
         return this._remote.isConnected();
     }
 
+    /**
+     * disconnect from ripple node server
+     *
+     * @memberof RippleFingate
+     */
     public disconnect() {
         if (this._remote) {
             this._remote.disconnect();
         }
     }
 
+    /**
+     * get xrp balance
+     *
+     * @param {string} address
+     * @returns {Promise<string>}
+     * @memberof RippleFingate
+     */
     public async getXrpBalance(address: string): Promise<string> {
         try {
             const balances = await this._remote.getBalances(address);
-            const balance = balances.find(b => b.currency.toUpperCase() === "XRP");
+            const balance = balances.find((b) => b.currency.toUpperCase() === "XRP");
             return balance.value;
         } catch (error) {
             throw error;
         }
     }
 
+    /**
+     * sign payment data
+     *
+     * @param {string} txJSON
+     * @param {string} secret
+     * @returns {ISignature}
+     * @memberof RippleFingate
+     */
     public sign(txJSON: string, secret: string): ISignature {
         try {
             return this._remote.sign(txJSON, secret);
@@ -78,7 +147,7 @@ export default class RippleFingate {
 
     public preparePayment(address: string, payment: IPayment): Promise<IPrepared> {
         return new Promise((resolve, reject) => {
-            this._remote.preparePayment(address, payment).then(prepared => {
+            this._remote.preparePayment(address, payment).then((prepared) => {
                 return resolve(prepared);
             }).catch((error) => {
                 return reject(error);
@@ -88,7 +157,7 @@ export default class RippleFingate {
 
     public submit(signedTransaction: string) {
         return new Promise((resolve, reject) => {
-            this._remote.submit(signedTransaction).then(result => {
+            this._remote.submit(signedTransaction).then((result) => {
                 return resolve(result);
             }).catch((error) => {
                 return reject(error);
@@ -96,31 +165,51 @@ export default class RippleFingate {
         });
     }
 
+    /**
+     * format payment data
+     *
+     * @param {string} from ripple address
+     * @param {string} destination ripple address
+     * @param {number} amount amount
+     * @param {string} memo memo
+     * @returns {IPayment}
+     * @memberof RippleFingate
+     */
     public formatPayment(from: string, destination: string, amount: number, memo: string): IPayment {
         const payment: IPayment = {
-            source: {
-                address: from,
-                maxAmount: {
-                    value: new BigNumber(amount).toString(10),
-                    currency: "XRP"
-                }
-            },
             destination: {
                 address: destination,
                 amount: {
-                    value: new BigNumber(amount).toString(10),
-                    currency: "XRP"
+                    currency: "XRP",
+                    value: new BigNumber(amount).toString(10)
                 }
             },
             memos: [{
-                type: "payment",
+                data: memo,
                 format: "plain/text",
-                data: memo
-            }]
-        }
+                type: "payment"
+            }],
+            source: {
+                address: from,
+                maxAmount: {
+                    currency: "XRP",
+                    value: new BigNumber(amount).toString(10)
+                }
+            }
+        };
         return payment;
     }
 
+    /**
+     * transfer XRP
+     *
+     * @param {string} secret ripple secret
+     * @param {string} destination ripple destination address
+     * @param {number} amount transfer amount
+     * @param {IMemo} memo  transfer memo
+     * @returns {Promise<string>} return hash if success
+     * @memberof RippleFingate
+     */
     @validate
     public async transfer(@isValidRippleSecret secret: string, @isValidRippleAddress destination: string, @isValidAmount amount: number, @isValidMemo memo: IMemo): Promise<string> {
         const from = RippleFingate.getAddress(secret);
@@ -129,7 +218,7 @@ export default class RippleFingate {
             const prepared = await this.preparePayment(from, payment);
             const signature = await this.sign(prepared.txJSON, secret);
             const response: any = await this.submit(signature.signedTransaction);
-            if (response.resultCode === 'tesSUCCESS') {
+            if (response.resultCode === "tesSUCCESS") {
                 return signature.id;
             } else {
                 throw new Error(response.resultMessage);

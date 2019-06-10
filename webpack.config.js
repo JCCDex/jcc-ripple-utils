@@ -2,21 +2,23 @@ const DuplicatePackageCheckerPlugin = require("duplicate-package-checker-webpack
 const path = require("path");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const pkg = require("./package.json");
 
 const config = {
   entry: "./lib",
   output: {
-    filename: "jcc-bizain-utils." + pkg.version + ".js",
+    filename: "jcc-ripple-utils.min.js",
     path: path.resolve(__dirname, "./dist"),
-    library: "jcc_bizain_utils",
+    library: "jcc_ripple_utils",
     libraryTarget: "umd"
   },
   target: "web",
   resolve: {
     extensions: [".js", ".ts"],
     alias: {
-      "bn.js": path.resolve(__dirname, "node_modules/bn.js")
+      "bn.js": path.resolve(__dirname, "node_modules/bn.js"),
+      // "bignumber.js": path.resolve(__dirname, "node_modules/bignumber.js"),
+      "elliptic": path.resolve(__dirname, "node_modules/elliptic"),
+      "ripple-keypairs": path.resolve(__dirname, "node_modules/jcc_wallet/node_modules/ripple-keypairs")
     }
   },
   mode: process.env.MODE === "dev" ? 'development' : "production",

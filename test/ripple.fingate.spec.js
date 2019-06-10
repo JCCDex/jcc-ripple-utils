@@ -97,6 +97,8 @@ describe("test ripple fingate", function() {
         await instance.connect();
       } catch (error) {
         expect(error).to.throw;
+      } finally {
+        instance.disconnect();
       }
     })
   })

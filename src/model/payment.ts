@@ -23,5 +23,5 @@ interface IDestination {
 export default interface IPayment {
     source: ISource,
     destination: IDestination,
-    memos: Array<IMemo>
+    memos: IMemo[]
 }

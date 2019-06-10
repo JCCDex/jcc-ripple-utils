@@ -1,5 +1,5 @@
-import RippleFingate from "../rippleFingate";
 import { isValidAddress } from "jcc_wallet/lib/jingtum";
+import RippleFingate from "../rippleFingate";
 
 const router = Symbol();
 const checkRippleAddressKey = Symbol();
