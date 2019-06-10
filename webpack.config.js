@@ -18,7 +18,7 @@ const config = {
       "bn.js": path.resolve(__dirname, "node_modules/bn.js"),
       // "bignumber.js": path.resolve(__dirname, "node_modules/bignumber.js"),
       "elliptic": path.resolve(__dirname, "node_modules/elliptic"),
-      "ripple-keypairs": path.resolve(__dirname, "node_modules/jcc_wallet/node_modules/ripple-keypairs")
+      "ripple-keypairs": path.resolve(__dirname, "node_modules/ripple-keypairs")
     }
   },
   mode: process.env.MODE === "dev" ? 'development' : "production",
