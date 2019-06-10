@@ -1,6 +1,6 @@
 {
   "name": "jcc-ripple-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Toolkit of crossing chain from Ripple to SWTC chain",
   "main": "lib/index.js",
   "unpkg": "dist/jcc-ripple-utils.min.js",
@@ -20,7 +20,8 @@
     "url": "git+https://github.com/JCCDex/jcc-ripple-utils.git"
   },
   "files": [
-    "lib"
+    "lib",
+    "dist"
   ],
   "dependencies": {
     "@types/node": "^12.0.4",
