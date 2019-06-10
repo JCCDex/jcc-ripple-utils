@@ -38,25 +38,28 @@ const config = {
   plugins: [
     new DuplicatePackageCheckerPlugin({
       strict: false
-    }),
-    new UglifyJsPlugin({
-      uglifyOptions: {
-        compress: {
-          sequences: true,
-          dead_code: true,
-          drop_console: true,
-          drop_debugger: true,
-          unused: true
-        }
-      },
-      sourceMap: false,
-      parallel: true
     })
   ]
 };
 
 if (process.env.REPORT === "true") {
   config.plugins.push(new BundleAnalyzerPlugin())
+}
+
+if (process.env.MODE !== "dev") {
+  config.plugins.push(new UglifyJsPlugin({
+    uglifyOptions: {
+      compress: {
+        sequences: true,
+        dead_code: true,
+        drop_console: true,
+        drop_debugger: true,
+        unused: true
+      }
+    },
+    sourceMap: false,
+    parallel: true
+  }))
 }
 
 module.exports = config;

@@ -29,6 +29,11 @@
     "ripple-lib": "^1.2.3"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-transform-runtime": "^7.4.4",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/runtime": "^7.4.5",
     "babelify": "^10.0.0",
     "browserify": "^16.2.3",
     "chai": "^4.1.2",
