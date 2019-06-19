@@ -164,7 +164,7 @@ describe("test ripple fingate", function() {
         resultCode: "tesSUCCESS"
       });
       try {
-        const hash = await inst.transfer(testSecret, testDestination, 1, testMemo);
+        const hash = await inst.transfer(testSecret, testDestination, "1", testMemo);
         expect(hash).to.equal(testSignature.id);
       } finally {
         sandbox.restore();
@@ -198,10 +198,10 @@ describe("test ripple fingate", function() {
     })
 
     it("throw error if the amount is invalid when transfer", function() {
-      expect(() => inst.transfer(testSecret, testDestination, 0, "")).to.throw("0 is invalid amount.");
+      expect(() => inst.transfer(testSecret, testDestination, "0", "")).to.throw("0 is invalid amount.");
     })
 
-    it("throw error if the amount is invalid when transfer", function() {
+    it("throw error if the jingtum address is invalid when transfer", function() {
       expect(() => inst.transfer(testSecret, testDestination, 1, {
         jtaddress: "a"
       })).to.throw("a is invalid jingtum address in memo.");

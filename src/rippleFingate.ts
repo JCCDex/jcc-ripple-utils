@@ -170,18 +170,18 @@ export default class RippleFingate {
      *
      * @param {string} from ripple address
      * @param {string} destination ripple address
-     * @param {number} amount amount
+     * @param {string} amount amount
      * @param {string} memo memo
      * @returns {IPayment}
      * @memberof RippleFingate
      */
-    public formatPayment(from: string, destination: string, amount: number, memo: string): IPayment {
+    public formatPayment(from: string, destination: string, amount: string, memo: string): IPayment {
         const payment: IPayment = {
             destination: {
                 address: destination,
                 amount: {
                     currency: "XRP",
-                    value: new BigNumber(amount).toString(10)
+                    value: amount
                 }
             },
             memos: [{
@@ -193,7 +193,7 @@ export default class RippleFingate {
                 address: from,
                 maxAmount: {
                     currency: "XRP",
-                    value: new BigNumber(amount).toString(10)
+                    value: amount
                 }
             }
         };
@@ -205,15 +205,15 @@ export default class RippleFingate {
      *
      * @param {string} secret ripple secret
      * @param {string} destination ripple destination address
-     * @param {number} amount transfer amount
+     * @param {string} amount transfer amount
      * @param {IMemo} memo  transfer memo
      * @returns {Promise<string>} return hash if success
      * @memberof RippleFingate
      */
     @validate
-    public async transfer(@isValidRippleSecret secret: string, @isValidRippleAddress destination: string, @isValidAmount amount: number, @isValidMemo memo: IMemo): Promise<string> {
+    public async transfer(@isValidRippleSecret secret: string, @isValidRippleAddress destination: string, @isValidAmount amount: string, @isValidMemo memo: IMemo): Promise<string> {
         const from = RippleFingate.getAddress(secret);
-        const payment = this.formatPayment(from, destination, amount, JSON.stringify(memo));
+        const payment = this.formatPayment(from, destination, new BigNumber(amount).toString(10), JSON.stringify(memo));
         try {
             const prepared = await this.preparePayment(from, payment);
             const signature = await this.sign(prepared.txJSON, secret);

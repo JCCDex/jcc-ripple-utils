@@ -46,7 +46,7 @@ const testMemo = {
     jtaddress: "jpgWGpfHz8GxqUjz5nb6ej8eZJQtiF6KhH"
 }
 
-const amount = 1;
+const amount = "1";
 
 try {
     // transfer 1 XRP
