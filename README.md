@@ -24,6 +24,14 @@ e.g. you transfer 1 `XRP` to [Ripple Fingate](https://bithomp.com/explorer/rMUpP
 npm install jcc-ripple-utils
 ```
 
+## CDN
+
+`jcc_ripple_utils` as a global variable
+
+```javascript
+<script src="https://unpkg.com/jcc-ripple-utils/dist/jcc-ripple-utils.min.js"></script>
+```
+
 ## Usage
 
 ```javascript
