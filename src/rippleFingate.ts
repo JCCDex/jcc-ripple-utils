@@ -16,8 +16,19 @@ import { isValidAmount, isValidMemo, isValidRippleAddress, isValidRippleSecret, 
  */
 export default class RippleFingate {
 
+    /**
+     * instance of RippleAPI
+     *
+     * @private
+     * @memberof RippleFingate
+     */
     private _remote = null;
 
+    /**
+     * Creates an instance of RippleFingate.
+     * @param {string} node
+     * @memberof RippleFingate
+     */
     constructor(node: string) {
         this._remote = new RippleAPI({
             server: node
@@ -32,7 +43,7 @@ export default class RippleFingate {
      * @memberof RippleFingate
      */
     public static createWallet(): IWallet {
-        return rippleWallet.createWallet();
+        return rippleWallet.createWallet({});
     }
 
     /**
@@ -107,6 +118,7 @@ export default class RippleFingate {
      * @memberof RippleFingate
      */
     public disconnect() {
+        /* istanbul ignore else */
         if (this._remote) {
             this._remote.disconnect();
         }
@@ -130,7 +142,7 @@ export default class RippleFingate {
     }
 
     /**
-     * sign payment data
+     * sign transaction
      *
      * @param {string} txJSON
      * @param {string} secret
@@ -145,6 +157,14 @@ export default class RippleFingate {
         }
     }
 
+    /**
+     * prepare payment
+     *
+     * @param {string} address
+     * @param {IPayment} payment
+     * @returns {Promise<IPrepared>}
+     * @memberof RippleFingate
+     */
     public preparePayment(address: string, payment: IPayment): Promise<IPrepared> {
         return new Promise((resolve, reject) => {
             this._remote.preparePayment(address, payment).then((prepared) => {
@@ -155,7 +175,14 @@ export default class RippleFingate {
         });
     }
 
-    public submit(signedTransaction: string) {
+    /**
+     * submit transaction
+     *
+     * @param {string} signedTransaction
+     * @returns {Promise<any>}
+     * @memberof RippleFingate
+     */
+    public submit(signedTransaction: string): Promise<any> {
         return new Promise((resolve, reject) => {
             this._remote.submit(signedTransaction).then((result) => {
                 return resolve(result);

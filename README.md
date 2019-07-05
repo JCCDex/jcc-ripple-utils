@@ -67,3 +67,7 @@ try {
     instance.disconnect();
 }
 ```
+
+## API
+
+see [API.md](https://github.com/JCCDex/jcc-ripple-utils/blob/master/docs/API.md)
