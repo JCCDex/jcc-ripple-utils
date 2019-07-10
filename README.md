@@ -26,7 +26,7 @@ npm install jcc-ripple-utils
 
 ## CDN
 
-`jcc_ripple_utils` as a global variable
+`jcc_ripple_utils` as a global variable.
 
 ```javascript
 <script src="https://unpkg.com/jcc-ripple-utils/dist/jcc-ripple-utils.min.js"></script>
