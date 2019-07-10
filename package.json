@@ -3,6 +3,7 @@
   "version": "0.1.2",
   "description": "Toolkit of crossing chain from Ripple to SWTC chain",
   "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "unpkg": "dist/jcc-ripple-utils.min.js",
   "scripts": {
     "deploy": "./publish.sh",
